@@ -1,0 +1,41 @@
+# Diretórios gerais a serem ignorados (comuns a ambos os projetos)
+**/node_modules/
+**/.vscode/
+**/.idea/
+**/.DS_Store
+**/dist/
+**/build/
+**/coverage/
+**/.env
+**/.env.local
+**/.env.development
+**/.env.test
+**/.env.production
+
+# Backend (NestJS) - Ignorar arquivos específicos
+backend/.cache/
+backend/logs/
+backend/*.log
+backend/**/*.js
+backend/**/*.map
+
+# Frontend (Angular) - Ignorar arquivos específicos
+frontend/.angular/
+frontend/**/*.js
+frontend/**/*.map
+
+# Arquivos de configuração de IDEs/Editores (opcional)
+**/.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+
+# Arquivos de lock (gerados automaticamente)
+**/package-lock.json
+**/yarn.lock
+**/pnpm-lock.yaml
+
+# Testes e relatórios
+**/junit.xml
+**/test-results/
+**/e2e/reports/
