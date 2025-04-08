@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -16,12 +17,19 @@ export class UsersService {
     const existing = await this.userRepository.findOne({
       where: { email: createUserDto.email },
     });
-
+  
     if (existing) {
       throw new BadRequestException('Email já cadastrado.');
     }
-
-    const user = this.userRepository.create(createUserDto);
+      
+    const saltOrRounds = 10;
+    const hashedPassword = await bcrypt.hash(createUserDto.password, saltOrRounds);
+  
+    const user = this.userRepository.create({
+      ...createUserDto,
+      password: hashedPassword,
+    });
+  
     return this.userRepository.save(user);
   }
 
