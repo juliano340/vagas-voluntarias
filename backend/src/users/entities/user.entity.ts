@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm';
 import { UserRole } from '../user-role.enum';
 import { Exclude } from 'class-transformer';
+import { Vaga } from 'src/vagas/entities/vagas.entity';
 
 
 @Entity()
@@ -27,4 +28,8 @@ export class User {
     default: UserRole.CANDIDATO,
   })
   role: UserRole;
+
+  @OneToMany(() => Vaga, (vaga) => vaga.publicadaPor)
+  vagas: Vaga[];
+
 }
