@@ -1,0 +1,38 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow">
+        <div class="card-body">
+          <h2 class="text-center mb-4">Entrar</h2>
+
+          <form [formGroup]="loginForm" (ngSubmit)="login()">
+            <div class="mb-3">
+              <label class="form-label">E-mail</label>
+              <input type="email" class="form-control" formControlName="email"  placeholder="Digite seu e-mail">
+              <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-danger small">
+                E-mail inválido.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Senha</label>
+              <input type="password" class="form-control" formControlName="password" placeholder="Digite sua senha">
+              <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger small">
+                Senha obrigatória.
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100" [disabled]="loginForm.invalid">
+              Entrar
+            </button>
+          </form>
+
+          <div *ngIf="erro" class="alert alert-danger mt-3">
+            {{ erro }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

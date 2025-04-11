@@ -1,0 +1,55 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card shadow">
+          <div class="card-body">
+            <h2 class="text-center mb-4">Criar conta</h2>
+  
+            <form [formGroup]="registerForm" (ngSubmit)="cadastrar()">
+  
+              <div class="mb-3">
+                <label class="form-label">Nome</label>
+                <input type="text" class="form-control" formControlName="name" placeholder="Digite seu nome">
+                <div *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched" class="text-danger small">
+                  Nome obrigatório.
+                </div>
+              </div>
+  
+              <div class="mb-3">
+                <label class="form-label">E-mail</label>
+                <input type="email" class="form-control" formControlName="email" placeholder="Digite seu e-mail">
+                <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="text-danger small">
+                  E-mail inválido.
+                </div>
+              </div>
+  
+              <div class="mb-3">
+                <label class="form-label">Senha</label>
+                <input type="password" class="form-control" formControlName="password" placeholder="Crie uma senha">
+                <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="text-danger small">
+                  Senha obrigatória.
+                </div>
+              </div>
+  
+              <div class="mb-3">
+                <label class="form-label">Tipo de usuário</label>
+                <select class="form-select" formControlName="role">
+                  <option value="candidato">Candidato</option>
+                  <option value="ofertante">Ofertante</option>
+                </select>
+              </div>
+  
+              <button type="submit" class="btn btn-success w-100" [disabled]="registerForm.invalid">
+                Cadastrar
+              </button>
+            </form>
+  
+            <div *ngIf="erro" class="alert alert-danger mt-3">
+              {{ erro }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+      
