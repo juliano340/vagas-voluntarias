@@ -1,1 +1,31 @@
-<p>vagas works!</p>
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Vagas Disponíveis</h2>
+  
+    <form (ngSubmit)="buscar()" class="row g-3 mb-4">
+      <div class="col-md-5">
+        <input type="text" [(ngModel)]="titulo" name="titulo" class="form-control" placeholder="Buscar por título">
+      </div>
+      <div class="col-md-5">
+        <input type="text" [(ngModel)]="localidade" name="localidade" class="form-control" placeholder="Buscar por localidade">
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-primary w-100" type="submit">Buscar</button>
+      </div>
+    </form>
+  
+    <div class="row">
+      <div class="col-md-4 mb-3" *ngFor="let vaga of vagas">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">{{ vaga.titulo }}</h5>
+            <p class="card-text">{{ vaga.descricao }}</p>
+            <p class="text-muted"><strong>Localidade:</strong> {{ vaga.localidade }}</p>
+          </div>
+          <div class="card-footer">
+            <small class="text-muted">Publicada por: {{ vaga.publicadaPor?.email }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
