@@ -1,4 +1,4 @@
-import { Injectable, ForbiddenException } from '@nestjs/common';
+import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateVagasDto } from './dto/create-vagas.dto';
@@ -48,12 +48,29 @@ export class VagasService {
     return this.vagaRepository.findOne({ where: { id }, relations: ['publicadaPor'] });
   }
 
-  async update(id: number, dto: UpdateVagasDto) {
-    await this.vagaRepository.update(id, dto);
-    return this.findOne(id);
+  async update(id: number, dto: UpdateVagasDto, user: User) {
+    const vaga = await this.vagaRepository.findOne({ where: { id }, relations: ['publicadaPor'] });
+  
+    if (!vaga) throw new NotFoundException('Vaga não encontrada');
+  
+    if (vaga.publicadaPor.id !== user.id) {
+      throw new ForbiddenException('Você não tem permissão para editar esta vaga');
+    }
+  
+    Object.assign(vaga, dto);
+    return this.vagaRepository.save(vaga);
   }
+  
 
-  remove(id: number) {
-    return this.vagaRepository.delete(id);
+  async remove(id: number, user: User) {
+    const vaga = await this.vagaRepository.findOne({ where: { id }, relations: ['publicadaPor'] });
+  
+    if (!vaga) throw new NotFoundException('Vaga não encontrada');
+  
+    if (vaga.publicadaPor.id !== user.id) {
+      throw new ForbiddenException('Você não tem permissão para remover esta vaga');
+    }
+  
+    return this.vagaRepository.remove(vaga);
   }
 }

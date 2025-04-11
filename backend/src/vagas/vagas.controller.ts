@@ -27,13 +27,15 @@ findAll(@Query('localidade') localidade?: string, @Query('titulo') titulo?: stri
     return this.vagasService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateVagasDto: UpdateVagasDto) {
-    return this.vagasService.update(+id, updateVagasDto);
-  }
+  @UseGuards(JwtAuthGuard)
+@Patch(':id')
+update(@Param('id') id: string, @Body() dto: UpdateVagasDto, @Request() req) {
+  return this.vagasService.update(+id, dto, req.user);
+}
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.vagasService.remove(+id);
-  }
+@UseGuards(JwtAuthGuard)
+@Delete(':id')
+remove(@Param('id') id: string, @Request() req) {
+  return this.vagasService.remove(+id, req.user);
+}
 }
