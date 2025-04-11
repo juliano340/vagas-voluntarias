@@ -18,6 +18,8 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'vagas/nova', component: VagasFormComponent, canActivate: [AuthGuard] },
   { path: 'minhas-vagas', component: MinhasVagasComponent, canActivate: [AuthGuard] },
+  { path: 'vagas/:id/editar',component: VagasFormComponent, canActivate: [AuthGuard]}
+  
 
 
 

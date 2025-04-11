@@ -42,6 +42,19 @@ export class VagasService {
       headers: { Authorization: `Bearer ${token}` }
     });
   }
+
+  buscarVaga(id: number) {
+    return this.http.get(`http://localhost:3000/vagas/${id}`);
+  }
+  
+  atualizarVaga(id: number, dados: any) {
+    const token = localStorage.getItem('token');
+    return this.http.patch(`http://localhost:3000/vagas/${id}`, dados, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
   
 
 }

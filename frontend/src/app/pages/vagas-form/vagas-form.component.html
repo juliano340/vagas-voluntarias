@@ -1,37 +1,36 @@
 <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="card shadow">
-          <div class="card-body">
-            <h2 class="mb-4 text-center">Nova Vaga</h2>
-  
-            <form [formGroup]="vagaForm" (ngSubmit)="salvar()">
-              <div class="mb-3">
-                <label class="form-label">Título</label>
-                <input type="text" class="form-control" formControlName="titulo" placeholder="Digite o título da vaga">
-              </div>
-  
-              <div class="mb-3">
-                <label class="form-label">Descrição</label>
-                <textarea class="form-control" formControlName="descricao" rows="3" placeholder="Descrição da vaga"></textarea>
-              </div>
-  
-              <div class="mb-3">
-                <label class="form-label">Localidade</label>
-                <input type="text" class="form-control" formControlName="localidade" placeholder="Ex: Porto Alegre - RS">
-              </div>
-  
-              <button type="submit" class="btn btn-success w-100" [disabled]="vagaForm.invalid">
-                Publicar Vaga
-              </button>
-            </form>
-  
-            <div *ngIf="erro" class="alert alert-danger mt-3">
-              {{ erro }}
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow">
+        <div class="card-body">
+          <h2 class="text-center mb-4">{{ isEdit ? 'Editar Vaga' : 'Nova Vaga' }}</h2>
+
+          <form [formGroup]="form" (ngSubmit)="salvar()">
+            <div class="mb-3">
+              <label class="form-label">Título</label>
+              <input type="text" class="form-control" formControlName="titulo" placeholder="Digite o título da vaga">
             </div>
+
+            <div class="mb-3">
+              <label class="form-label">Descrição</label>
+              <textarea class="form-control" formControlName="descricao" rows="3" placeholder="Descreva a vaga"></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Localidade</label>
+              <input type="text" class="form-control" formControlName="localidade" placeholder="Ex: Porto Alegre - RS">
+            </div>
+
+            <button type="submit" class="btn btn-success w-100" [disabled]="form.invalid">
+              {{ isEdit ? 'Atualizar' : 'Criar' }}
+            </button>
+          </form>
+
+          <div *ngIf="erro" class="alert alert-danger mt-3">
+            {{ erro }}
           </div>
         </div>
       </div>
     </div>
   </div>
-  
+</div>

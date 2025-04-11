@@ -1,127 +1,109 @@
-📘 Portal de Vagas Voluntárias – Backend (NestJS)
 
-✅ Visão Geral
+# 📅 Módulo de Vagas - Portal de Vagas Voluntárias
 
-Este projeto é a API backend do Portal de Vagas Voluntárias, desenvolvido em NestJS com banco de dados PostgreSQL, usando autenticação JWT, TypeORM e arquitetura modular. O sistema permite o cadastro de usuários com perfis distintos e gerenciamento de vagas para trabalho voluntário.
+Este documento descreve a implementação do módulo **Vagas** no backend do Portal de Vagas Voluntárias, desenvolvido com NestJS, TypeORM e PostgreSQL.
 
-🚀 Tecnologias Utilizadas
+---
 
-NestJS
+## 🌐 Visão Geral
 
-TypeORM
+O módulo de Vagas permite que usuários autenticados com perfil `ofertante` publiquem vagas de trabalho voluntário. Cada vaga é vinculada ao usuário que a criou e pode ser visualizada por qualquer outro usuário autenticado.
 
-PostgreSQL
+---
 
-JWT (JSON Web Token)
+## 🚫 Regras de Acesso
 
-bcrypt
+- Apenas **usuários com perfil `ofertante`** podem criar novas vagas.
+- Rota protegida com `JwtAuthGuard`.
 
-class-validator / class-transformer
+---
 
-@nestjs/config para leitura de variáveis de ambiente
+## 🧱 Entidade `Vaga`
 
-🧱 Estrutura Inicial
+| Campo         | Tipo       | Descrição                                |
+|---------------|------------|--------------------------------------------|
+| `id`          | number     | Identificador da vaga                      |
+| `titulo`      | string     | Título da vaga                            |
+| `descricao`   | string     | Descrição da vaga                         |
+| `localidade`  | string     | Cidade ou região (ex: Porto Alegre - RS)  |
+| `dataCriacao` | Date       | Data/hora de criação da vaga             |
+| `publicadaPor`| User       | Usuário ofertante que publicou a vaga     |
 
-👤 Users
+Relacionamento:
+- `@ManyToOne(() => User, user => user.vagas)`
 
-Cadastro de usuários com perfis: candidato ou ofertante
+---
 
-Validações com class-validator
+## 🔧 DTOs
 
-Senhas armazenadas de forma segura com bcrypt
+### CreateVagaDto
+```ts
+{
+  titulo: string;
+  descricao: string;
+  localidade: string;
+}
+```
+Validações aplicadas com `class-validator`.
 
-Campos protegidos (como password) ocultados da API com @Exclude
+---
 
-🔐 Auth
+## 📡 Endpoints
 
-Login com email e senha
+### POST `/vagas`
+**Cria nova vaga (apenas ofertante)**
 
-Geração de token JWT válido por 5 minutos
+**Requisição:**
+```json
+{
+  "titulo": "Voluntário para aula de reforço escolar",
+  "descricao": "Atuar com crianças do ensino fundamental oferecendo reforço em matemática e português.",
+  "localidade": "Porto Alegre - RS"
+}
+```
+**Cabeçalho:**
+```
+Authorization: Bearer <token JWT>
+```
 
-Estratégia de validação de token via JwtStrategy
+**Resposta esperada:**
+```json
+{
+  "id": 1,
+  "titulo": "Voluntário para aula de reforço escolar",
+  "descricao": "Atuar com crianças...",
+  "localidade": "Porto Alegre - RS",
+  "dataCriacao": "2025-04-10T16:53:24.529Z",
+  "publicadaPor": {
+    "id": 5,
+    "email": "brasil@email.com",
+    "role": "ofertante"
+  }
+}
+```
 
-Proteção de rotas com JwtAuthGuard
+### GET `/vagas`
+**Lista todas as vagas com quem publicou**
 
-📆 Variáveis de Ambiente (.env)
+---
 
-DB_HOST=localhost
-DB_PORT=5432
-DB_USERNAME=postgres
-DB_PASSWORD=root
-DB_NAME=vagas
-JWT_SECRET=A292FCF5664822974D91E6CF951DE
+## 📄 Status
 
-⚒️ Instalação e Execução
+- [x] Cadastro de vagas com proteção JWT
+- [x] Vinculação da vaga com o usuário ofertante
+- [x] Listagem de vagas com relação `publicadaPor`
+- [ ] Filtros por localidade ou título
+- [ ] Atualização e remoção protegidas por permissão
+- [ ] Integração com frontend Angular
 
-npm install
-npm run start:dev
+---
 
-🔐 Autenticação
+## ⚙️ Comando de geração do módulo
 
-Endpoint de login
+```bash
+nest g resource vagas
+```
 
-POST /auth/login
+---
 
-Retorna: { access_token: string }
-
-Proteção de rotas
-
-Utilize o header:
-
-Authorization: Bearer <token>
-
-📡 Endpoints Atuais
-
-📁 Usuários
-
-Método
-
-Rota
-
-Descrição
-
-POST
-
-/users
-
-Cadastra novo usuário
-
-GET
-
-/users
-
-Lista todos (rota protegida)
-
-GET
-
-/users/:id
-
-Busca um usuário por ID
-
-PATCH
-
-/users/:id
-
-Atualiza dados do usuário
-
-DELETE
-
-/users/:id
-
-Remove usuário por ID
-
-🔑 Autenticação
-
-Método
-
-Rota
-
-Descrição
-
-POST
-
-/auth/login
-
-Realiza o login e retorna o token JWT
-
-♻️ Próximos passos (MVP)
+## 🌟 Testado com sucesso via Insomnia!
