@@ -5,6 +5,8 @@ import { RegisterComponent } from './pages/register/register.component';
 import { VagasComponent } from './pages/vagas/vagas.component';
 import { VagasFormComponent } from './pages/vagas-form/vagas-form.component';
 import { AuthGuard } from './guards/auth.guard';
+import { MinhasVagasComponent } from './pages/minhas-vagas/minhas-vagas.component';
+
 
 
 const routes: Routes = [
@@ -15,6 +17,8 @@ const routes: Routes = [
   { path: 'vagas/nova', component: VagasFormComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'vagas/nova', component: VagasFormComponent, canActivate: [AuthGuard] },
+  { path: 'minhas-vagas', component: MinhasVagasComponent, canActivate: [AuthGuard] },
+
 
 
 ];

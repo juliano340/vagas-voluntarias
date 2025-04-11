@@ -73,4 +73,16 @@ export class VagasService {
   
     return this.vagaRepository.remove(vaga);
   }
+  async findMinhas(userId: number) {
+    return this.vagaRepository.find({
+      where: {
+        publicadaPor: { id: userId },
+      },
+      relations: ['publicadaPor'],
+      order: {
+        dataCriacao: 'DESC',
+      },
+    });
+  }
+  
 }

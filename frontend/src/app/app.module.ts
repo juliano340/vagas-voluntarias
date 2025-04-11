@@ -10,6 +10,8 @@ import { RegisterComponent } from './pages/register/register.component';
 import { VagasComponent } from './pages/vagas/vagas.component';
 import { VagasFormComponent } from './pages/vagas-form/vagas-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { MinhasVagasComponent } from './pages/minhas-vagas/minhas-vagas.component';
 
 
 
@@ -21,7 +23,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     LoginComponent,
     RegisterComponent,
     VagasComponent,
-    VagasFormComponent
+    VagasFormComponent,
+    NavbarComponent,
+    MinhasVagasComponent
   ],
   imports: [
     BrowserModule,

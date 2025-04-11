@@ -1,0 +1,24 @@
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Minhas Vagas</h2>
+  
+    <div *ngIf="vagas.length === 0" class="alert alert-info text-center">
+      Nenhuma vaga cadastrada.
+    </div>
+  
+    <div class="row" *ngIf="vagas.length > 0">
+      <div class="col-md-4 mb-3" *ngFor="let vaga of vagas">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">{{ vaga.titulo }}</h5>
+            <p class="card-text">{{ vaga.descricao }}</p>
+            <p class="text-muted"><strong>Localidade:</strong> {{ vaga.localidade }}</p>
+          </div>
+          <div class="card-footer d-flex justify-content-between">
+            <button class="btn btn-outline-primary btn-sm" [routerLink]="['/vagas', vaga.id, 'editar']">Editar</button>
+            <button class="btn btn-outline-danger btn-sm" (click)="excluir(vaga.id)">Excluir</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

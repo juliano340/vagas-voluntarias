@@ -24,6 +24,24 @@ export class VagasService {
       },
     });
   }
+  minhasVagas(): Observable<any[]> {
+    const token = localStorage.getItem('token');
+    console.log(token) 
+    return this.http.get<any[]>('http://localhost:3000/vagas/minhas', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+  
+
+  removerVaga(id: number) {
+    const token = localStorage.getItem('token');
+    
+    return this.http.delete(`${this.api}/${id}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  }
   
 
 }

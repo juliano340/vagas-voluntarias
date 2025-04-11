@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UnauthorizedException } from '@nestjs/common';
 import { VagasService } from './vagas.service';
 import { CreateVagasDto } from './dto/create-vagas.dto';
 import { UpdateVagasDto } from './dto/update-vagas.dto';
@@ -16,18 +16,30 @@ export class VagasController {
   }
   
 
-  @Get()
+@Get()
 findAll(@Query('localidade') localidade?: string, @Query('titulo') titulo?: string) {
   return this.vagasService.findAll({ localidade, titulo });
 }
 
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+@Get('minhas')
+@UseGuards(JwtAuthGuard)
+findMinhas(@Request() req) {
+  console.log('user recebido:', req.user); // 👈 Veja o que chega aqui
+
+  const userId = Number(req.user?.id);
+  if (isNaN(userId)) throw new UnauthorizedException('Usuário inválido');
+
+  return this.vagasService.findMinhas(userId);
+}
+
+
+@Get(':id')
+findOne(@Param('id') id: string) {
     return this.vagasService.findOne(+id);
   }
 
-  @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @Patch(':id')
 update(@Param('id') id: string, @Body() dto: UpdateVagasDto, @Request() req) {
   return this.vagasService.update(+id, dto, req.user);
@@ -38,4 +50,5 @@ update(@Param('id') id: string, @Body() dto: UpdateVagasDto, @Request() req) {
 remove(@Param('id') id: string, @Request() req) {
   return this.vagasService.remove(+id, req.user);
 }
+
 }
