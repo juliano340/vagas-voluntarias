@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { VagasService } from './vagas.service';
 import { CreateVagasDto } from './dto/create-vagas.dto';
 import { UpdateVagasDto } from './dto/update-vagas.dto';
@@ -17,9 +17,10 @@ export class VagasController {
   
 
   @Get()
-  findAll() {
-    return this.vagasService.findAll();
-  }
+findAll(@Query('localidade') localidade?: string, @Query('titulo') titulo?: string) {
+  return this.vagasService.findAll({ localidade, titulo });
+}
+
 
   @Get(':id')
   findOne(@Param('id') id: string) {

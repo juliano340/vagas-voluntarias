@@ -26,8 +26,22 @@ export class VagasService {
     return this.vagaRepository.save(novaVaga);
   }
 
-  findAll() {
-    return this.vagaRepository.find({ relations: ['publicadaPor'] });
+  async findAll(filtros: { localidade?: string; titulo?: string }) {
+    const { localidade, titulo } = filtros;
+  
+    const query = this.vagaRepository.createQueryBuilder('vaga')
+      .leftJoinAndSelect('vaga.publicadaPor', 'user')
+      .orderBy('vaga.dataCriacao', 'DESC');
+  
+    if (localidade) {
+      query.andWhere('vaga.localidade ILIKE :localidade', { localidade: `%${localidade}%` });
+    }
+  
+    if (titulo) {
+      query.andWhere('vaga.titulo ILIKE :titulo', { titulo: `%${titulo}%` });
+    }
+  
+    return query.getMany();
   }
 
   findOne(id: number) {
