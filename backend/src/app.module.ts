@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { VagasModule } from './vagas/vagas.module';
+import { CandidaturasModule } from './candidaturas/candidaturas.module';
 dotenv.config();
 
 @Module({
@@ -24,7 +25,8 @@ dotenv.config();
     UsersModule,
     AuthModule,
     ConfigModule.forRoot({ isGlobal: true }),
-    VagasModule
+    VagasModule,
+    CandidaturasModule
   ],
   controllers: [AppController],
   providers: [AppService],

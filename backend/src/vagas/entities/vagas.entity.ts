@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
+import { Candidatura } from 'src/candidaturas/entities/candidatura.entity';
 
 @Entity()
 export class Vaga {
@@ -20,4 +21,7 @@ export class Vaga {
 
   @ManyToOne(() => User, (user) => user.vagas)
   publicadaPor: User;
+
+  @OneToMany(() => Candidatura, candidatura => candidatura.vaga)
+  candidaturas: Candidatura[];
 }

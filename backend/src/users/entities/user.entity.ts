@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } f
 import { UserRole } from '../user-role.enum';
 import { Exclude } from 'class-transformer';
 import { Vaga } from 'src/vagas/entities/vagas.entity';
+import { Candidatura } from 'src/candidaturas/entities/candidatura.entity';
 
 
 @Entity()
@@ -27,9 +28,13 @@ export class User {
     enum: UserRole,
     default: UserRole.CANDIDATO,
   })
-  role: UserRole;
+    role: UserRole;
 
   @OneToMany(() => Vaga, (vaga) => vaga.publicadaPor)
   vagas: Vaga[];
+
+  @OneToMany(() => Candidatura, candidatura => candidatura.usuario)
+  candidaturas: Candidatura[];
+
 
 }
