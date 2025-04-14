@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { VagasService } from '../../services/vagas.service';
 import { ViewChild, ElementRef } from '@angular/core';
-import { Toast } from 'bootstrap';
+import { Toast, Modal } from 'bootstrap';
+
 
 @Component({
   selector: 'app-minhas-vagas',
@@ -9,6 +10,9 @@ import { Toast } from 'bootstrap';
 })
 export class MinhasVagasComponent implements OnInit {
   vagas: any[] = [];
+  candidatos: any[] = [];
+
+  @ViewChild('candidatosModal', { static: false }) modalElement!: ElementRef;
   @ViewChild('toastErro', { static: false }) toastErro!: ElementRef;
 
 
@@ -35,13 +39,27 @@ export class MinhasVagasComponent implements OnInit {
         }
       });
     }
-  }
-  
+  }  
 
   mostrarToastErro() {
     const toastElement = this.toastErro.nativeElement;
     const toastBootstrap = new Toast(toastElement, { delay: 3000, autohide: true });
     toastBootstrap.show();
   }
+
+  abrirCandidatos(vagaId: number) {
+    this.vagasService.listarCandidatos(vagaId).subscribe({
+      next: (res) => {
+        this.candidatos = res;
+  
+        const modal = new Modal(document.getElementById('candidatosModal')!);
+        modal.show();
+      },
+      error: (err) => {
+        console.error('Erro ao buscar candidatos:', err);
+      }
+    });
+  }
+  
   
 }

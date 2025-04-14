@@ -5,12 +5,18 @@ import { CreateVagasDto } from './dto/create-vagas.dto';
 import { UpdateVagasDto } from './dto/update-vagas.dto';
 import { Vaga } from './entities/vagas.entity';
 import { User } from '../users/entities/user.entity';
+import { Candidatura } from 'src/candidaturas/entities/candidatura.entity';
 
 @Injectable()
 export class VagasService {
+  
+
+  
   constructor(
     @InjectRepository(Vaga)
     private vagaRepository: Repository<Vaga>,
+    @InjectRepository(Candidatura)
+    private candidaturaRepository: Repository<Candidatura>,
   ) {}
 
   async create(dto: CreateVagasDto, user: User) {
@@ -98,5 +104,32 @@ async remove(id: number, user: User) {
       },
     });
   }
+
+  async listarCandidatosDaVaga(vagaId: number, user: User) {
+    const vaga = await this.vagaRepository.findOne({
+      where: { id: vagaId },
+      relations: ['publicadaPor'],
+    });
+  
+    if (!vaga) throw new NotFoundException('Vaga não encontrada');
+  
+    if (vaga.publicadaPor.id !== user.id) {
+      throw new ForbiddenException('Você não tem permissão para ver os candidatos desta vaga.');
+    }
+  
+    const candidaturas = await this.candidaturaRepository.find({
+      where: { vaga: { id: vagaId } },
+      relations: ['usuario'],
+      order: { dataCandidatura: 'DESC' },
+    });
+  
+    return candidaturas.map(c => ({
+      id: c.usuario.id,
+      nome: c.usuario.name,
+      email: c.usuario.email,
+      dataCandidatura: c.dataCandidatura,
+    }));
+  }
+  
   
 }

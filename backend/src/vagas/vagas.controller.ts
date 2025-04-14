@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UnauthorizedException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UnauthorizedException, ParseIntPipe } from '@nestjs/common';
 import { VagasService } from './vagas.service';
 import { CreateVagasDto } from './dto/create-vagas.dto';
 import { UpdateVagasDto } from './dto/update-vagas.dto';
@@ -49,6 +49,12 @@ update(@Param('id') id: string, @Body() dto: UpdateVagasDto, @Request() req) {
 @Delete(':id')
 remove(@Param('id') id: string, @Request() req) {
   return this.vagasService.remove(+id, req.user);
+}
+
+@UseGuards(JwtAuthGuard)
+@Get(':id/candidatos')
+async listarCandidatos(@Param('id', ParseIntPipe) id: number, @Request() req) {
+  return this.vagasService.listarCandidatosDaVaga(id, req.user);
 }
 
 }

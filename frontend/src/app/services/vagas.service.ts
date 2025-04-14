@@ -65,6 +65,11 @@ export class VagasService {
       vagaId,
     });
   }
+
+  listarCandidatos(vagaId: number) {
+    return this.http.get<any[]>(`http://localhost:3000/vagas/${vagaId}/candidatos`);
+  }
+  
   
 
 }
