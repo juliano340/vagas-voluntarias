@@ -18,10 +18,10 @@
           <li class="nav-item" *ngIf="isLoggedIn()">
             <a class="nav-link" routerLink="/vagas" routerLinkActive="active">Vagas</a>
           </li>
-          <li class="nav-item" *ngIf="isLoggedIn()">
+          <li class="nav-item" *ngIf="isLoggedIn() && !isCandidato">            
             <a class="nav-link" routerLink="/vagas/nova" routerLinkActive="active">Nova Vaga</a>
           </li>
-          <li class="nav-item" *ngIf="isLoggedIn()">
+          <li class="nav-item" *ngIf="isLoggedIn() && !isCandidato">
             <a class="nav-link" routerLink="/minhas-vagas" routerLinkActive="active">Minhas Vagas</a>
           </li>
           
