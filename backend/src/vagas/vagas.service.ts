@@ -1,4 +1,4 @@
-import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
+import { Injectable, ForbiddenException, NotFoundException, InternalServerErrorException, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateVagasDto } from './dto/create-vagas.dto';
@@ -62,17 +62,31 @@ export class VagasService {
   }
   
 
-  async remove(id: number, user: User) {
-    const vaga = await this.vagaRepository.findOne({ where: { id }, relations: ['publicadaPor'] });
   
-    if (!vaga) throw new NotFoundException('Vaga não encontrada');
-  
-    if (vaga.publicadaPor.id !== user.id) {
-      throw new ForbiddenException('Você não tem permissão para remover esta vaga');
-    }
-  
-    return this.vagaRepository.remove(vaga);
+
+async remove(id: number, user: User) {
+  const vaga = await this.vagaRepository.findOne({
+    where: { id },
+    relations: ['publicadaPor'],
+  });
+
+  if (!vaga) throw new NotFoundException('Vaga não encontrada');
+
+  if (vaga.publicadaPor.id !== user.id) {
+    throw new ForbiddenException('Você não tem permissão para remover esta vaga');
   }
+
+  try {
+    await this.vagaRepository.remove(vaga);
+  } catch (error) {
+    if (error.code === '23503') {
+      // Código do PostgreSQL para violação de chave estrangeira
+      throw new ConflictException('Não é possível excluir a vaga pois existem candidatos inscritos.');
+    }
+
+    throw new InternalServerErrorException('Erro ao tentar excluir a vaga.');
+  }
+}
   async findMinhas(userId: number) {
     return this.vagaRepository.find({
       where: {
