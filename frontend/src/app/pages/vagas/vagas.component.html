@@ -21,9 +21,25 @@
             <p class="card-text">{{ vaga.descricao }}</p>
             <p class="text-muted"><strong>Localidade:</strong> {{ vaga.localidade }}</p>
           </div>
-          <div class="card-footer">
+          <div class="card-footer d-flex flex-column gap-2">
             <small class="text-muted">Publicada por: {{ vaga.publicadaPor?.email }}</small>
+          
+            <!-- 🔓 Usuário não logado -->
+            <button *ngIf="!isLogado" class="btn btn-outline-secondary btn-sm"  [routerLink]="['/login']">
+              Faça login para se candidatar
+            </button>
+          
+            <!-- ✅ Já candidatado -->
+            <button *ngIf="isCandidato && vagasCandidatadas.includes(vaga.id)" class="btn btn-success btn-sm" disabled>
+              ✅ Já candidatado
+            </button>
+          
+            <!-- 🟢 Pode se candidatar -->
+            <button *ngIf="isCandidato && !vagasCandidatadas.includes(vaga.id)" (click)="candidatar(vaga.id)" class="btn btn-primary btn-sm">
+              Candidatar-se
+            </button>
           </div>
+          
         </div>
       </div>
     </div>

@@ -85,4 +85,17 @@ export class CandidaturasService {
     const candidatura = await this.findOne(id);
     await this.candidaturaRepository.remove(candidatura);
   }
+
+  async findVagasDoUsuario(usuarioId: number): Promise<number[]> {
+    const candidaturas = await this.candidaturaRepository.find({
+      where: {
+        usuario: { id: usuarioId },
+      },
+      relations: ['vaga'],
+    });
+  
+    // Retornar apenas os IDs das vagas
+    return candidaturas.map((c) => c.vaga.id);
+  }
+  
 }

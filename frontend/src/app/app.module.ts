@@ -12,6 +12,8 @@ import { VagasFormComponent } from './pages/vagas-form/vagas-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { MinhasVagasComponent } from './pages/minhas-vagas/minhas-vagas.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 
 
@@ -34,7 +36,7 @@ import { MinhasVagasComponent } from './pages/minhas-vagas/minhas-vagas.componen
     HttpClientModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

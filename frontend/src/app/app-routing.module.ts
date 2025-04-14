@@ -10,7 +10,7 @@ import { MinhasVagasComponent } from './pages/minhas-vagas/minhas-vagas.componen
 
 
 const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'vagas', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'vagas', component: VagasComponent },

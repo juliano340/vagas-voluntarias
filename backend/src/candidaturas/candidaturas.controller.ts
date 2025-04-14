@@ -7,10 +7,15 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { CandidaturasService } from './candidaturas.service';
 import { CreateCandidaturaDto } from './dto/create-candidatura.dto';
 import { UpdateCandidaturaDto } from './dto/update-candidatura.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { RequestWithUser } from '../auth/types/RequestWithUser'; // ajuste o caminho
+
 
 @Controller('candidaturas')
 export class CandidaturasController {
@@ -25,6 +30,13 @@ export class CandidaturasController {
   findAll() {
     return this.candidaturasService.findAll();
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('minhas')
+  async findMinhas(@Req() req: any) {
+    const usuarioId = req.user.sub;
+    return this.candidaturasService.findVagasDoUsuario(usuarioId);
+}
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
@@ -43,4 +55,6 @@ export class CandidaturasController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.candidaturasService.remove(id);
   }
+
+  
 }

@@ -55,6 +55,16 @@ export class VagasService {
       },
     });
   }
+
+  vagasCandidatadas() {
+    return this.http.get<number[]>(`http://localhost:3000/candidaturas/minhas`);
+  }
+  
+  candidatarSe(vagaId: number) {
+    return this.http.post('http://localhost:3000/candidaturas', {
+      vagaId,
+    });
+  }
   
 
 }
