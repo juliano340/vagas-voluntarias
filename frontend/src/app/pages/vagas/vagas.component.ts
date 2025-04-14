@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { VagasService } from '../../services/vagas.service';
+import { ViewChild, ElementRef } from '@angular/core';
+import { Toast } from 'bootstrap';
 
 @Component({
   selector: 'app-vagas',
@@ -12,6 +14,8 @@ export class VagasComponent implements OnInit {
   isLogado = false;
   isCandidato = false;
   vagasCandidatadas: number[] = [];
+  @ViewChild('toastSucesso', { static: false }) toastSucesso!: ElementRef;
+
 
   constructor(private vagasService: VagasService) {}
 
@@ -55,11 +59,11 @@ export class VagasComponent implements OnInit {
       alert('Você precisa estar logado como candidato para se candidatar.');
       return;
     }
-
+  
     this.vagasService.candidatarSe(id).subscribe({
       next: () => {
-        alert('Candidatura realizada com sucesso!');
         this.vagasCandidatadas.push(id);
+        this.mostrarToastSucesso();
       },
       error: (err) => {
         if (err.status === 409) {
@@ -70,4 +74,18 @@ export class VagasComponent implements OnInit {
       }
     });
   }
+  
+
+  mostrarToastSucesso() {
+    const toastElement = this.toastSucesso.nativeElement;
+  
+    // Cria uma nova instância do toast Bootstrap com autohide em 2000ms
+    const toastBootstrap = new Toast(toastElement, {
+      delay: 2000, // tempo em ms
+      autohide: true,
+    });
+  
+    toastBootstrap.show();
+  }
+  
 }
