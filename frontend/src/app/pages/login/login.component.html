@@ -26,9 +26,12 @@
               Entrar
             </button>
           </form>
-
           <div *ngIf="erro" class="alert alert-danger mt-3">
             {{ erro }}
+          </div>
+          <div class="text-center mt-3">
+            <span>Ainda não tem uma conta? </span>
+            <a routerLink="/register">Cadastre-se!</a>
           </div>
         </div>
       </div>
