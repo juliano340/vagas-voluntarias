@@ -3,11 +3,13 @@
       <a class="navbar-brand" routerLink="/">Voluntários</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
-      </button>
+      </button>      
   
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-  
+        <ul class="navbar-nav ms-auto">         
+          <li class="nav-item d-flex align-items-center text-white me-3" *ngIf="isLoggedIn()">
+            <span> Conta: {{ nomeUsuario | titlecase }}</span>
+          </li>
           <li class="nav-item" *ngIf="!isLoggedIn()">
             <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
           </li>
