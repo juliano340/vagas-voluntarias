@@ -1,34 +1,64 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { VagasService } from '../../services/vagas.service';
-import { ViewChild, ElementRef } from '@angular/core';
 import { Toast } from 'bootstrap';
+import { Router, NavigationEnd } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-vagas',
   templateUrl: './vagas.component.html',
 })
-export class VagasComponent implements OnInit {
+export class VagasComponent implements OnInit, OnDestroy {
   vagas: any[] = [];
   titulo = '';
   localidade = '';
   isLogado = false;
   isCandidato = false;
   vagasCandidatadas: number[] = [];
+  routerSubscription!: Subscription;
+
   @ViewChild('toastSucesso', { static: false }) toastSucesso!: ElementRef;
 
-
-  constructor(private vagasService: VagasService) {}
+  constructor(private vagasService: VagasService, private router: Router) {}
 
   ngOnInit() {
+    this.carregarDados();
+
+    // Recarrega os dados sempre que a rota for acessada novamente
+    this.routerSubscription = this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.carregarDados();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+
+  carregarDados() {
+    console.clear(); // limpa o console pra facilitar a leitura
+    console.log('%c[DEBUG] 🚀 carregando dados...', 'color: cyan');
+  
+    this.vagas = [];
+    this.vagasCandidatadas = [];
+    this.isLogado = false;
+    this.isCandidato = false;
+  
     const token = localStorage.getItem('token');
     this.isLogado = !!token;
+    console.log('[DEBUG] Token encontrado?', token ? 'SIM' : 'NÃO');
   
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
         this.isCandidato = payload.role === 'candidato';
+        console.log('[DEBUG] Usuário é candidato?', this.isCandidato);
+        console.log('[DEBUG] Payload do token:', payload);
       } catch (error) {
-        console.error('Erro ao decodificar o token:', error);
+        console.error('[DEBUG] Erro ao decodificar token:', error);
       }
     }
   
@@ -36,30 +66,42 @@ export class VagasComponent implements OnInit {
       this.vagasService.vagasCandidatadas().subscribe({
         next: (ids: number[]) => {
           this.vagasCandidatadas = ids;
-          this.buscar(); // busca as vagas depois que os IDs foram carregados
+          console.log('[DEBUG] IDs das vagas já candidatadas:', this.vagasCandidatadas);
+          this.buscar();
         },
         error: (err) => {
-          console.error('Erro ao buscar vagas candidatadas:', err);
-          this.buscar(); // mesmo com erro, carrega as vagas
+          console.error('[DEBUG] Erro ao buscar vagas candidatadas:', err);
+          this.vagasCandidatadas = [];
+          this.buscar();
         }
       });
     } else {
-      this.buscar(); // se não é candidato, apenas busca
+      this.vagasCandidatadas = [];
+      this.buscar();
     }
   }
   
 
   buscar() {
+    console.log('[DEBUG] Buscando vagas com filtros:', {
+      titulo: this.titulo,
+      localidade: this.localidade,
+    });
+  
     this.vagasService.listarVagas({ titulo: this.titulo, localidade: this.localidade })
-      .subscribe((data: any[]) => this.vagas = data);
+      .subscribe((data: any[]) => {
+        this.vagas = data;
+        console.log('[DEBUG] Vagas carregadas:', this.vagas);
+      });
   }
+  
 
   candidatar(id: number) {
     if (!this.isLogado || !this.isCandidato) {
       alert('Você precisa estar logado como candidato para se candidatar.');
       return;
     }
-  
+
     this.vagasService.candidatarSe(id).subscribe({
       next: () => {
         this.vagasCandidatadas.push(id);
@@ -74,18 +116,14 @@ export class VagasComponent implements OnInit {
       }
     });
   }
-  
 
   mostrarToastSucesso() {
     const toastElement = this.toastSucesso.nativeElement;
-  
-    // Cria uma nova instância do toast Bootstrap com autohide em 2000ms
     const toastBootstrap = new Toast(toastElement, {
-      delay: 2000, // tempo em ms
+      delay: 2000,
       autohide: true,
     });
-  
+
     toastBootstrap.show();
   }
-  
 }

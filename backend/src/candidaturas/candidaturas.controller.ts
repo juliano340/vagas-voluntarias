@@ -21,9 +21,12 @@ import { RequestWithUser } from '../auth/types/RequestWithUser'; // ajuste o cam
 export class CandidaturasController {
   constructor(private readonly candidaturasService: CandidaturasService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createCandidaturaDto: CreateCandidaturaDto) {
-    return this.candidaturasService.create(createCandidaturaDto);
+  create(@Body() createCandidaturaDto: CreateCandidaturaDto, @Req() req: any) {
+    const userId = req.user.id;
+    console.log(req.user) // ← ID do usuário autenticado via JWT
+    return this.candidaturasService.create(userId, createCandidaturaDto);
   }
 
   @Get()

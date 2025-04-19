@@ -6,6 +6,7 @@ import { VagasComponent } from './pages/vagas/vagas.component';
 import { VagasFormComponent } from './pages/vagas-form/vagas-form.component';
 import { AuthGuard } from './guards/auth.guard';
 import { MinhasVagasComponent } from './pages/minhas-vagas/minhas-vagas.component';
+import { PerfilComponent } from './pages/perfil/perfil.component';
 
 
 
@@ -18,7 +19,9 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'vagas/nova', component: VagasFormComponent, canActivate: [AuthGuard] },
   { path: 'minhas-vagas', component: MinhasVagasComponent, canActivate: [AuthGuard] },
-  { path: 'vagas/:id/editar',component: VagasFormComponent, canActivate: [AuthGuard]}
+  { path: 'vagas/:id/editar',component: VagasFormComponent, canActivate: [AuthGuard]},
+  { path: 'perfil', component: PerfilComponent }
+
   
 
 

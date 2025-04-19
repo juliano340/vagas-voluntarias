@@ -1,71 +1,58 @@
 <div class="container mt-5">
-    <h2 class="mb-4 text-center">Vagas Disponíveis</h2>
-  
-    <form (ngSubmit)="buscar()" class="row g-3 mb-4">
-      <div class="col-md-5">
-        <input type="text" [(ngModel)]="titulo" name="titulo" class="form-control" placeholder="Buscar por título">
-      </div>
-      <div class="col-md-5">
-        <input type="text" [(ngModel)]="localidade" name="localidade" class="form-control" placeholder="Buscar por localidade">
-      </div>
-      <div class="col-md-2">
-        <button class="btn btn-primary w-100" type="submit">Buscar</button>
-      </div>
-    </form>
-  
-    <div class="row">
-      <div class="col-md-4 mb-3" *ngFor="let vaga of vagas">
-        <div class="card h-100 shadow-sm">
-          <div class="card-body">
-            <h5 class="card-title">{{ vaga.titulo }}</h5>
-            <p class="card-text">{{ vaga.descricao }}</p>
-            <p class="text-muted"><strong>Localidade:</strong> {{ vaga.localidade }}</p>
-          </div>
-          <div class="card-footer d-flex flex-column gap-2">
-            <small class="text-muted">Publicada por: {{ vaga.publicadaPor?.email }}</small>
+  <h2 class="mb-4 text-center">Vagas Disponíveis</h2>
+
+  <form (ngSubmit)="buscar()" class="row g-3 mb-4">
+    <div class="col-md-5">
+      <input type="text" [(ngModel)]="titulo" name="titulo" class="form-control" placeholder="Buscar por título" />
+    </div>
+    <div class="col-md-5">
+      <input type="text" [(ngModel)]="localidade" name="localidade" class="form-control" placeholder="Buscar por localidade" />
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-primary w-100" type="submit">Buscar</button>
+    </div>
+  </form>
+
+  <div class="row">
+    <div class="col-md-4 mb-3" *ngFor="let vaga of vagas">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">{{ vaga.titulo }}</h5>
+          <p class="card-text">{{ vaga.descricao }}</p>
+          <p class="text-muted"><strong>Localidade:</strong> {{ vaga.localidade }}</p>
+
           
-            <!-- 🔓 Usuário não logado -->
-            <button *ngIf="!isLogado" class="btn btn-outline-secondary btn-sm"  [routerLink]="['/login']">
-              Faça login para se candidatar
-            </button>
-          
-            <!-- ✅ Já candidatado -->
-            <button *ngIf="isCandidato && vagasCandidatadas.includes(vaga.id)" class="btn btn-success btn-sm" disabled>
-              ✅ Já candidatado
-            </button>
-          
-            <!-- 🟢 Pode se candidatar -->
-            <button *ngIf="isCandidato && !vagasCandidatadas.includes(vaga.id)" (click)="candidatar(vaga.id)" class="btn btn-primary btn-sm">
-              Candidatar-se
-            </button>
-          </div>
-          
+        </div>
+
+        <div class="card-footer d-flex flex-column gap-2">
+          <small class="text-muted">Publicada por: {{ vaga.publicadaPor?.email }}</small>
+
+          <!-- 🔓 Usuário não logado -->
+          <button *ngIf="!isLogado" class="btn btn-outline-secondary btn-sm" [routerLink]="['/login']">
+            Faça login para se candidatar
+          </button>
+
+          <!-- ✅ Já candidatado -->
+          <button *ngIf="isCandidato && vagasCandidatadas.includes(+vaga.id)" class="btn btn-success btn-sm" disabled>
+            ✅ Já candidatado
+          </button>
+
+          <!-- 🟢 Pode se candidatar -->
+          <button *ngIf="isCandidato && !vagasCandidatadas.includes(+vaga.id)" (click)="candidatar(vaga.id)" class="btn btn-primary btn-sm">
+            Candidatar-se
+          </button>
         </div>
       </div>
     </div>
   </div>
-  
-  <div
-  class="toast-container position-fixed bottom-0 end-0 p-3"
-  style="z-index: 1055;"
->
-  <div
-    class="toast align-items-center text-white bg-success border-0"
-    role="alert"
-    aria-live="assertive"
-    aria-atomic="true"
-    #toastSucesso
-  >
+</div>
+
+<!-- ✅ TOAST DE SUCESSO -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
+  <div class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" #toastSucesso>
     <div class="d-flex">
-      <div class="toast-body">
-        Candidatura realizada com sucesso!
-      </div>
-      <button
-        type="button"
-        class="btn-close btn-close-white me-2 m-auto"
-        data-bs-dismiss="toast"
-        aria-label="Close"
-      ></button>
+      <div class="toast-body">Candidatura realizada com sucesso!</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
   </div>
 </div>

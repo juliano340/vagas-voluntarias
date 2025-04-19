@@ -14,6 +14,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { MinhasVagasComponent } from './pages/minhas-vagas/minhas-vagas.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { PerfilComponent } from './pages/perfil/perfil.component';
 
 
 
@@ -27,7 +28,8 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     VagasComponent,
     VagasFormComponent,
     NavbarComponent,
-    MinhasVagasComponent
+    MinhasVagasComponent,
+    PerfilComponent
   ],
   imports: [
     BrowserModule,

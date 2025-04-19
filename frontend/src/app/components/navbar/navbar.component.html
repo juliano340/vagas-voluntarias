@@ -24,6 +24,8 @@
           <li class="nav-item" *ngIf="isLoggedIn() && !isCandidato">
             <a class="nav-link" routerLink="/minhas-vagas" routerLinkActive="active">Minhas Vagas</a>
           </li>
+          <a class="nav-link" routerLink="/perfil">Meu Perfil</a>
+
           
           <li class="nav-item" *ngIf="isLoggedIn()">
             <a class="nav-link" href="#" (click)="logout()">Sair</a>

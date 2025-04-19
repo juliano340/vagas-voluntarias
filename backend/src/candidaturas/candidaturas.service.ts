@@ -24,32 +24,28 @@ export class CandidaturasService {
     private userRepository: Repository<User>,
   ) {}
 
-  async create(createCandidaturaDto: CreateCandidaturaDto): Promise<Candidatura> {
-    const { vagaId, userId } = createCandidaturaDto;
-
+  async create(userId: number, createCandidaturaDto: CreateCandidaturaDto): Promise<Candidatura> {
+    const { vagaId } = createCandidaturaDto;
+  
     const vaga = await this.vagaRepository.findOne({ where: { id: vagaId } });
-    if (!vaga) {
-      throw new NotFoundException('Vaga não encontrada');
-    }
-
+    if (!vaga) throw new NotFoundException('Vaga não encontrada');
+  
     const user = await this.userRepository.findOne({ where: { id: userId } });
-    if (!user) {
-      throw new NotFoundException('Usuário não encontrado');
-    }
-
+    if (!user) throw new NotFoundException('Usuário não encontrado');
+  
     const candidaturaExistente = await this.candidaturaRepository.findOne({
       where: { vaga: { id: vagaId }, usuario: { id: userId } },
     });
-
+  
     if (candidaturaExistente) {
       throw new ConflictException('Usuário já se candidatou a esta vaga');
     }
-
+  
     const novaCandidatura = this.candidaturaRepository.create({
       vaga,
-      usuario:user,
+      usuario: user,
     });
-
+  
     return this.candidaturaRepository.save(novaCandidatura);
   }
 
@@ -87,15 +83,16 @@ export class CandidaturasService {
   }
 
   async findVagasDoUsuario(usuarioId: number): Promise<number[]> {
-    const candidaturas = await this.candidaturaRepository.find({
-      where: {
-        usuario: { id: usuarioId },
-      },
-      relations: ['vaga'],
-    });
+    const candidaturas = await this.candidaturaRepository
+      .createQueryBuilder('candidatura')
+      .leftJoin('candidatura.usuario', 'usuario')
+      .leftJoin('candidatura.vaga', 'vaga')
+      .where('usuario.id = :usuarioId', { usuarioId })
+      .select('vaga.id', 'id')
+      .getRawMany();
   
-    // Retornar apenas os IDs das vagas
-    return candidaturas.map((c) => c.vaga.id);
+    return candidaturas.map((c) => c.id);
   }
+  
   
 }

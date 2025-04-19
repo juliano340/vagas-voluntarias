@@ -1,0 +1,9 @@
+<div class="card">
+  <div class="card-body" *ngIf="usuario">
+    <h5 class="card-title">Perfil do Usuário</h5>
+    <p><strong>Nome:</strong> {{ usuario.name }}</p>
+    <p><strong>Email:</strong> {{ usuario.email }}</p>
+    <p><strong>Tipo:</strong> {{ usuario.role === 'candidato' ? 'Candidato' : 'Ofertante' }}</p>
+    <p><strong>Data de Cadastro:</strong> {{ usuario.createdAt | date:'short' }}</p>
+  </div>
+</div>
