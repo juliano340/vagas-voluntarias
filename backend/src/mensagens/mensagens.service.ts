@@ -1,10 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Mensagem } from './entities/mensagen.entity';
 import { Repository } from 'typeorm';
 import { CreateMensagemDto } from './dto/create-mensagen.dto';
 import { User } from 'src/users/entities/user.entity';
 import { Vaga } from 'src/vagas/entities/vagas.entity';
+import { Candidatura } from '../candidaturas/entities/candidatura.entity';
+
 
 @Injectable()
 export class MensagensService {
@@ -17,26 +19,48 @@ export class MensagensService {
 
     @InjectRepository(Vaga)
     private readonly vagaRepo: Repository<Vaga>,
+
+    @InjectRepository(Candidatura)
+    private candidaturaRepo: Repository<Candidatura>, 
   ) {}
 
-  async create(remetenteId: number, dto: CreateMensagemDto) {
+  async create(remetenteId: number, dto: CreateMensagemDto): Promise<Mensagem> {
+    const { destinatarioId, texto, vagaId } = dto;
+  
     const remetente = await this.userRepo.findOne({ where: { id: remetenteId } });
-    const destinatario = await this.userRepo.findOne({ where: { id: dto.destinatarioId } });
-    const vaga = await this.vagaRepo.findOne({ where: { id: dto.vagaId } });
-
+    const destinatario = await this.userRepo.findOne({ where: { id: destinatarioId } });
+    const vaga = await this.vagaRepo.findOne({
+      where: { id: vagaId },
+      relations: ['publicadaPor']
+    });
+  
     if (!remetente || !destinatario || !vaga) {
       throw new NotFoundException('Remetente, destinatário ou vaga não encontrados');
-    }
-
-    const mensagem = this.mensagemRepo.create({
+    }  
+    
+    const candidatoRelacionado = await this.candidaturaRepo.findOne({
+      where: {
+        usuario: { id: remetenteId },
+        vaga: { id: vagaId }
+      }
+    });
+  
+    const remetenteÉOfertante = vaga.publicadaPor.id === remetenteId;
+  
+    if (!remetenteÉOfertante && !candidatoRelacionado) {
+      throw new ForbiddenException('Você não está autorizado a enviar mensagens nesta vaga.');
+    }  
+    
+    const novaMensagem = this.mensagemRepo.create({
+      texto,
       remetente,
       destinatario,
-      vaga,
-      texto: dto.texto,
+      vaga
     });
-
-    return this.mensagemRepo.save(mensagem);
+  
+    return this.mensagemRepo.save(novaMensagem);
   }
+  
 
   async findConversaEntreUsuarios(vagaId: number, usuarioA: number, usuarioB: number) {
     return this.mensagemRepo.find({
