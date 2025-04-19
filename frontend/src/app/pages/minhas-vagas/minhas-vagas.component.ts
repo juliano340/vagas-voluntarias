@@ -27,17 +27,13 @@ export class MinhasVagasComponent implements OnInit {
   }
 
   excluir(id: number) {
-    if (confirm('Deseja realmente excluir esta vaga?')) {
+    if (confirm('Ao excluir esta vaga, todas as candidaturas e mensagens relacionadas também serão removidas. Deseja continuar?')) {
       this.vagasService.removerVaga(id).subscribe({
         next: () => {
           this.vagas = this.vagas.filter(v => v.id !== id);
         },
         error: (err) => {
-          if (err.status === 409) {
-            this.mostrarToastErro(); // mostra toast se houver conflito
-          } else {
-            console.error('Erro ao excluir vaga:', err);
-          }
+          console.error('Erro ao excluir vaga:', err);
         }
       });
     }

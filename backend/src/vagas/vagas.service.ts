@@ -6,6 +6,7 @@ import { UpdateVagasDto } from './dto/update-vagas.dto';
 import { Vaga } from './entities/vagas.entity';
 import { User } from '../users/entities/user.entity';
 import { Candidatura } from 'src/candidaturas/entities/candidatura.entity';
+import { Mensagem } from 'src/mensagens/entities/mensagen.entity';
 
 @Injectable()
 export class VagasService {
@@ -17,6 +18,8 @@ export class VagasService {
     private vagaRepository: Repository<Vaga>,
     @InjectRepository(Candidatura)
     private candidaturaRepository: Repository<Candidatura>,
+    @InjectRepository(Mensagem)
+    private mensagemRepository: Repository<Mensagem>,
   ) {}
 
   async create(dto: CreateVagasDto, user: User) {
@@ -70,29 +73,33 @@ export class VagasService {
 
   
 
-async remove(id: number, user: User) {
-  const vaga = await this.vagaRepository.findOne({
-    where: { id },
-    relations: ['publicadaPor'],
-  });
-
-  if (!vaga) throw new NotFoundException('Vaga não encontrada');
-
-  if (vaga.publicadaPor.id !== user.id) {
-    throw new ForbiddenException('Você não tem permissão para remover esta vaga');
-  }
-
-  try {
-    await this.vagaRepository.remove(vaga);
-  } catch (error) {
-    if (error.code === '23503') {
-      // Código do PostgreSQL para violação de chave estrangeira
-      throw new ConflictException('Não é possível excluir a vaga pois existem candidatos inscritos.');
+  async remove(id: number, user: User) {
+    const vaga = await this.vagaRepository.findOne({
+      where: { id },
+      relations: ['publicadaPor'],
+    });
+  
+    if (!vaga) throw new NotFoundException('Vaga não encontrada');
+  
+    if (vaga.publicadaPor.id !== user.id) {
+      throw new ForbiddenException('Você não tem permissão para remover esta vaga');
     }
-
-    throw new InternalServerErrorException('Erro ao tentar excluir a vaga.');
+  
+    try {
+      // 🧹 1. Remove mensagens relacionadas à vaga
+      await this.mensagemRepository.delete({ vaga: { id } });
+  
+      // 🧹 2. Remove candidaturas relacionadas à vaga
+      await this.candidaturaRepository.delete({ vaga: { id } });
+  
+      // 🧹 3. Remove a vaga
+      await this.vagaRepository.remove(vaga);
+  
+    } catch (error) {
+      throw new InternalServerErrorException('Erro ao tentar excluir a vaga.');
+    }
   }
-}
+  
   async findMinhas(userId: number) {
     return this.vagaRepository.find({
       where: {
