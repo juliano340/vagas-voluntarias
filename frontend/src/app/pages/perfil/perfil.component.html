@@ -1,9 +1,43 @@
-<div class="card">
-  <div class="card-body" *ngIf="usuario">
-    <h5 class="card-title">Perfil do Usuário</h5>
-    <p><strong>Nome:</strong> {{ usuario.name }}</p>
-    <p><strong>Email:</strong> {{ usuario.email }}</p>
-    <p><strong>Tipo:</strong> {{ usuario.role === 'candidato' ? 'Candidato' : 'Ofertante' }}</p>
-    <p><strong>Data de Cadastro:</strong> {{ usuario.createdAt | date:'short' }}</p>
+<div class="card" *ngIf="usuario">
+  <div class="card-body">
+    <h5 class="card-title d-flex justify-content-between align-items-center">
+      Perfil do Usuário
+      <button class="btn btn-outline-secondary btn-sm" (click)="modoEdicao = !modoEdicao">
+        {{ modoEdicao ? 'Cancelar' : 'Editar' }}
+      </button>
+    </h5>
+
+    <form (ngSubmit)="salvar()" #perfilForm="ngForm">
+      <div class="mb-3">
+        <label for="name" class="form-label"><strong>Nome</strong></label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          class="form-control"
+          [(ngModel)]="usuario.name"
+          [disabled]="!modoEdicao"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label"><strong>Email</strong></label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          [(ngModel)]="usuario.email"
+          [disabled]="!modoEdicao"
+          required
+        />
+      </div>
+
+      <p><strong>Tipo:</strong> {{ usuario.role === 'candidato' ? 'Candidato' : 'Ofertante' }}</p>
+      <p><strong>Data de Cadastro:</strong> {{ usuario.createdAt | date:'short' }}</p>
+
+      <button class="btn btn-primary mt-3" type="submit" [disabled]="!modoEdicao">Salvar Alterações</button>
+    </form>
   </div>
 </div>
