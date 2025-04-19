@@ -15,6 +15,9 @@ import { MinhasVagasComponent } from './pages/minhas-vagas/minhas-vagas.componen
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { PerfilComponent } from './pages/perfil/perfil.component';
+import { RouterModule } from '@angular/router';
+import { LandingComponent } from './pages/landing/landing.component';
+
 
 
 
@@ -29,14 +32,17 @@ import { PerfilComponent } from './pages/perfil/perfil.component';
     VagasFormComponent,
     NavbarComponent,
     MinhasVagasComponent,
-    PerfilComponent
+    PerfilComponent,
+    LandingComponent
   ],
   imports: [
     BrowserModule,
+    RouterModule,
     AppRoutingModule,
     FormsModule, 
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent]
