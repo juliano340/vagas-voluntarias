@@ -17,6 +17,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { PerfilComponent } from './pages/perfil/perfil.component';
 import { RouterModule } from '@angular/router';
 import { LandingComponent } from './pages/landing/landing.component';
+import { MensagensComponent } from './pages/mensagens/mensagens.component';
 
 
 
@@ -33,7 +34,8 @@ import { LandingComponent } from './pages/landing/landing.component';
     NavbarComponent,
     MinhasVagasComponent,
     PerfilComponent,
-    LandingComponent
+    LandingComponent,
+    MensagensComponent
   ],
   imports: [
     BrowserModule,

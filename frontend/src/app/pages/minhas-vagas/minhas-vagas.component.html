@@ -63,10 +63,19 @@
           Nenhum candidato inscrito para esta vaga.
         </div>
         <ul class="list-group" *ngIf="candidatos.length > 0">
-          <li class="list-group-item" *ngFor="let c of candidatos">
-            <strong>{{ c.nome }}</strong> – {{ c.email }}<br>
-            <small class="text-muted">Inscrito em: {{ c.dataCandidatura | date:'short' }}</small>
+          <li class="list-group-item d-flex justify-content-between align-items-start" *ngFor="let c of candidatos">
+            <div class="me-auto">
+              <strong>{{ c.nome }}</strong> – {{ c.email }}<br>
+              <small class="text-muted">Inscrito em: {{ c.dataCandidatura | date:'short' }}</small>
+            </div>
+            <a class="btn btn-outline-primary btn-sm"
+   [routerLink]="['/mensagens', vagaSelecionadaId, c.id]"
+   data-bs-dismiss="modal">
+  Conversar
+</a>
+
           </li>
+          
         </ul>
       </div>
     </div>

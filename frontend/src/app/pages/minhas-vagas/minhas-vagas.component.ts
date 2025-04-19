@@ -11,6 +11,8 @@ import { Toast, Modal } from 'bootstrap';
 export class MinhasVagasComponent implements OnInit {
   vagas: any[] = [];
   candidatos: any[] = [];
+  vagaSelecionadaId: number = 0;
+
 
   @ViewChild('candidatosModal', { static: false }) modalElement!: ElementRef;
   @ViewChild('toastErro', { static: false }) toastErro!: ElementRef;
@@ -48,18 +50,17 @@ export class MinhasVagasComponent implements OnInit {
   }
 
   abrirCandidatos(vagaId: number) {
+    this.vagaSelecionadaId = vagaId;
     this.vagasService.listarCandidatos(vagaId).subscribe({
-      next: (res) => {
-        this.candidatos = res;
-  
+      next: (data) => {
+        this.candidatos = data;
         const modal = new Modal(document.getElementById('candidatosModal')!);
         modal.show();
       },
-      error: (err) => {
-        console.error('Erro ao buscar candidatos:', err);
-      }
+      error: (err) => console.error('Erro ao buscar candidatos:', err)
     });
   }
+  
   
   
 }
