@@ -37,9 +37,10 @@ export class CandidaturasController {
   @UseGuards(JwtAuthGuard)
   @Get('minhas')
   async findMinhas(@Req() req: any) {
-    const usuarioId = req.user.sub;
+    console.log('🔐 Usuario autenticado:', req.user);
+    const usuarioId = req.user.id;
     return this.candidaturasService.findVagasDoUsuario(usuarioId);
-}
+  }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {

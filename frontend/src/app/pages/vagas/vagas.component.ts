@@ -22,14 +22,16 @@ export class VagasComponent implements OnInit, OnDestroy {
   constructor(private vagasService: VagasService, private router: Router) {}
 
   ngOnInit() {
-    this.carregarDados();
-
-    // Recarrega os dados sempre que a rota for acessada novamente
+    // Sempre reseta o estado quando entra na rota
     this.routerSubscription = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
+        this.resetarEstado();
         this.carregarDados();
       }
     });
+
+    this.resetarEstado();
+    this.carregarDados();
   }
 
   ngOnDestroy() {
@@ -38,19 +40,22 @@ export class VagasComponent implements OnInit, OnDestroy {
     }
   }
 
-  carregarDados() {
-    console.clear(); // limpa o console pra facilitar a leitura
-    console.log('%c[DEBUG] 🚀 carregando dados...', 'color: cyan');
-  
+  // 🔄 Limpa todas as variáveis ao trocar de usuário
+  resetarEstado() {
     this.vagas = [];
     this.vagasCandidatadas = [];
     this.isLogado = false;
     this.isCandidato = false;
-  
+  }
+
+  carregarDados() {
+    console.clear();
+    console.log('%c[DEBUG] 🚀 carregando dados...', 'color: cyan');
+
     const token = localStorage.getItem('token');
     this.isLogado = !!token;
     console.log('[DEBUG] Token encontrado?', token ? 'SIM' : 'NÃO');
-  
+
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
@@ -61,11 +66,11 @@ export class VagasComponent implements OnInit, OnDestroy {
         console.error('[DEBUG] Erro ao decodificar token:', error);
       }
     }
-  
+
     if (this.isCandidato) {
       this.vagasService.vagasCandidatadas().subscribe({
         next: (ids: number[]) => {
-          this.vagasCandidatadas = ids;
+          this.vagasCandidatadas = ids.map(Number); // ✅ Força o tipo number
           console.log('[DEBUG] IDs das vagas já candidatadas:', this.vagasCandidatadas);
           this.buscar();
         },
@@ -80,21 +85,19 @@ export class VagasComponent implements OnInit, OnDestroy {
       this.buscar();
     }
   }
-  
 
   buscar() {
     console.log('[DEBUG] Buscando vagas com filtros:', {
       titulo: this.titulo,
       localidade: this.localidade,
     });
-  
+
     this.vagasService.listarVagas({ titulo: this.titulo, localidade: this.localidade })
       .subscribe((data: any[]) => {
         this.vagas = data;
         console.log('[DEBUG] Vagas carregadas:', this.vagas);
       });
   }
-  
 
   candidatar(id: number) {
     if (!this.isLogado || !this.isCandidato) {
@@ -104,12 +107,18 @@ export class VagasComponent implements OnInit, OnDestroy {
 
     this.vagasService.candidatarSe(id).subscribe({
       next: () => {
-        this.vagasCandidatadas.push(id);
+        // 🔄 Sempre recarrega da API após a candidatura
+        this.vagasService.vagasCandidatadas().subscribe((ids) => {
+          this.vagasCandidatadas = ids.map(Number);
+        });
         this.mostrarToastSucesso();
       },
       error: (err) => {
         if (err.status === 409) {
           alert('Você já se candidatou a esta vaga.');
+          this.vagasService.vagasCandidatadas().subscribe((ids) => {
+            this.vagasCandidatadas = ids.map(Number);
+          });
         } else {
           alert('Erro ao realizar candidatura.');
         }

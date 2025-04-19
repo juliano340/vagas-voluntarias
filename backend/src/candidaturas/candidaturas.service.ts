@@ -80,19 +80,21 @@ export class CandidaturasService {
   async remove(id: number): Promise<void> {
     const candidatura = await this.findOne(id);
     await this.candidaturaRepository.remove(candidatura);
-  }
-
-  async findVagasDoUsuario(usuarioId: number): Promise<number[]> {
-    const candidaturas = await this.candidaturaRepository
-      .createQueryBuilder('candidatura')
-      .leftJoin('candidatura.usuario', 'usuario')
-      .leftJoin('candidatura.vaga', 'vaga')
-      .where('usuario.id = :usuarioId', { usuarioId })
-      .select('vaga.id', 'id')
-      .getRawMany();
+  }  
   
-    return candidaturas.map((c) => c.id);
+  async findVagasDoUsuario(usuarioId: number): Promise<number[]> {
+    const candidaturas = await this.candidaturaRepository.find({
+      where: { usuario: { id: usuarioId } },
+      relations: ['vaga', 'usuario'], // 👈 IMPORTANTE: carregar 'usuario'
+    });
+  
+    console.log('📝 Candidaturas encontradas para usuário', usuarioId, ':', candidaturas);
+  
+    return candidaturas.map(c => c.vaga.id);
   }
+  
+  
+  
   
   
 }

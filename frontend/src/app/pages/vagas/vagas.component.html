@@ -18,10 +18,14 @@
       <div class="card h-100 shadow-sm">
         <div class="card-body">
           <h5 class="card-title">{{ vaga.titulo }}</h5>
+          <pre class="text-muted small">
+            vaga.id: {{ vaga.id }}
+            vagasCandidatadas: {{ vagasCandidatadas }}
+            includes(+vaga.id)? → {{ vagasCandidatadas.includes(+vaga.id) ? '✅ true' : '❌ false' }}
+            </pre>
+            
           <p class="card-text">{{ vaga.descricao }}</p>
           <p class="text-muted"><strong>Localidade:</strong> {{ vaga.localidade }}</p>
-
-          
         </div>
 
         <div class="card-footer d-flex flex-column gap-2">
