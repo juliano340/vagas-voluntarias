@@ -85,5 +85,19 @@ export class MensagensService {
   
     return Array.from(conversasMap.values());
   }
+
+  async listarVagaIdsComMensagensRecebidas(userId: number): Promise<number[]> {
+    const mensagens = await this.mensagemRepo.find({
+      where: { destinatario: { id: userId } },
+      relations: ['vaga'],
+    });
+  
+    // extrai os ids das vagas
+    const vagaIds = mensagens.map(m => m.vaga.id);
+    // remove duplicados
+    return [...new Set(vagaIds)];
+  }
+  
+  
   
 }

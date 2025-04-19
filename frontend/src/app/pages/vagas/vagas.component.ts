@@ -16,6 +16,8 @@ export class VagasComponent implements OnInit, OnDestroy {
   isCandidato = false;
   vagasCandidatadas: number[] = [];
   routerSubscription!: Subscription;
+  vagasComMensagens: number[] = [];
+
 
   @ViewChild('toastSucesso', { static: false }) toastSucesso!: ElementRef;
 
@@ -32,6 +34,13 @@ export class VagasComponent implements OnInit, OnDestroy {
 
     this.resetarEstado();
     this.carregarDados();
+
+    if (this.isCandidato) {
+      this.vagasService.vagasComMensagensRecebidas().subscribe({
+        next: (ids) => this.vagasComMensagens = ids,
+        error: () => this.vagasComMensagens = []
+      });
+    }
   }
 
   ngOnDestroy() {

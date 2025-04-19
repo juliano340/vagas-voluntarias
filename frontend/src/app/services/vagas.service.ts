@@ -73,4 +73,12 @@ export class VagasService {
   listarCandidatos(vagaId: number) {
     return this.http.get<any[]>(`http://localhost:3000/vagas/${vagaId}/candidatos`);
   }
+
+  vagasComMensagensRecebidas() {
+    const token = localStorage.getItem('token');
+    return this.http.get<number[]>(`http://localhost:3000/mensagens/recebidas/vagas`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  }
+  
 }

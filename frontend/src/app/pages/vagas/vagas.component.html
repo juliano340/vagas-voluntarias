@@ -25,11 +25,12 @@
         </div>
 
         <div class="card-footer d-flex flex-column gap-2">
-          <a *ngIf="vagasCandidatadas.includes(vaga.id)"
+          <a *ngIf="isCandidato && vagasComMensagens.includes(vaga.id)"
    class="btn btn-outline-primary btn-sm"
    [routerLink]="['/mensagens', vaga.id, vaga.publicadaPor.id]">
   Ver mensagens
 </a>
+
 
           <small class="text-muted">Publicada por: {{ vaga.publicadaPor?.email }}</small>
 

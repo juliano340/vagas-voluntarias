@@ -30,6 +30,13 @@ findMinhasConversas(@Req() req: any) {
   return this.mensagensService.listarConversasPorUsuario(usuarioId);
 }
 
+@UseGuards(JwtAuthGuard)
+@Get('recebidas/vagas')
+async listarVagasComMensagensRecebidas(@Req() req: any) {
+  const userId = req.user.id;
+  return this.mensagensService.listarVagaIdsComMensagensRecebidas(userId);
+}
+
   @UseGuards(JwtAuthGuard)
   @Get('conversa/:vagaId/:usuarioId')
   findConversa(
@@ -40,4 +47,6 @@ findMinhasConversas(@Req() req: any) {
     const usuarioLogadoId = req.user.id;
     return this.mensagensService.findConversaEntreUsuarios(vagaId, usuarioLogadoId, outroUsuarioId);
   }
+
+
 }
