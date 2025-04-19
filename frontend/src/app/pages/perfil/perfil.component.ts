@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class PerfilComponent implements OnInit {
   usuario: any;
-  modoEdicao: boolean = false; // 👈 controla se campos estão editáveis
+  modoEdicao: boolean = false; 
 
   constructor(private http: HttpClient) {}
 
@@ -28,7 +28,7 @@ export class PerfilComponent implements OnInit {
     }).subscribe({
       next: () => {
         alert('Perfil atualizado com sucesso!');
-        this.modoEdicao = false; // 👈 volta para visualização
+        this.modoEdicao = false; 
       },
       error: (err) => console.error('Erro ao salvar perfil:', err)
     });

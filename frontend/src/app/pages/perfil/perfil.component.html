@@ -1,3 +1,6 @@
+<div class="container mt-5">
+
+
 <div class="card" *ngIf="usuario">
   <div class="card-body">
     <h5 class="card-title d-flex justify-content-between align-items-center">
@@ -31,13 +34,22 @@
           [(ngModel)]="usuario.email"
           [disabled]="!modoEdicao"
           required
+          email
+          #emailRef="ngModel"
         />
+        <!-- Mensagem de erro -->
+        <div class="text-danger small mt-1" *ngIf="emailRef.invalid && emailRef.touched">
+          Digite um e-mail válido.
+        </div>
       </div>
 
       <p><strong>Tipo:</strong> {{ usuario.role === 'candidato' ? 'Candidato' : 'Ofertante' }}</p>
       <p><strong>Data de Cadastro:</strong> {{ usuario.createdAt | date:'short' }}</p>
 
-      <button class="btn btn-primary mt-3" type="submit" [disabled]="!modoEdicao">Salvar Alterações</button>
+      <button class="btn btn-primary mt-3" type="submit" [disabled]="!modoEdicao || perfilForm.invalid">
+        Salvar Alterações
+      </button>
     </form>
   </div>
+</div>
 </div>
