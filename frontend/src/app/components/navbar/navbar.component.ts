@@ -3,6 +3,8 @@ import { Router, NavigationEnd } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { filter } from 'rxjs/operators';
+import * as bootstrap from 'bootstrap';
+
 
 @Component({
   selector: 'app-navbar',
@@ -32,6 +34,14 @@ export class NavbarComponent implements OnInit {
     this.authService.role$.subscribe((role) => {
       this.isCandidato = role === 'candidato';
     });
+  }
+
+  toggleMenu() {
+    const navbar = document.getElementById('navbarNav');
+    if (!navbar) return;
+  
+    const instance = bootstrap.Collapse.getInstance(navbar) || new bootstrap.Collapse(navbar);
+    navbar.classList.contains('show') ? instance.hide() : instance.show();
   }
 
   carregarDadosDoToken() {
