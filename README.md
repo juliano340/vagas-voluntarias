@@ -46,9 +46,6 @@ npm install
 # DB_NAME=nome_do_banco
 # JWT_SECRET=sua_chave_jwt
 
-# Rode as migrações (se houver)
-npm run typeorm migration:run
-
 # Inicie a API
 npm run start:dev
 ```

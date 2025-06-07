@@ -24,28 +24,31 @@ export class CandidaturasService {
     private userRepository: Repository<User>,
   ) {}
 
-  async create(userId: number, createCandidaturaDto: CreateCandidaturaDto): Promise<Candidatura> {
+  async create(
+    userId: number,
+    createCandidaturaDto: CreateCandidaturaDto,
+  ): Promise<Candidatura> {
     const { vagaId } = createCandidaturaDto;
-  
+
     const vaga = await this.vagaRepository.findOne({ where: { id: vagaId } });
     if (!vaga) throw new NotFoundException('Vaga não encontrada');
-  
+
     const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) throw new NotFoundException('Usuário não encontrado');
-  
+
     const candidaturaExistente = await this.candidaturaRepository.findOne({
       where: { vaga: { id: vagaId }, usuario: { id: userId } },
     });
-  
+
     if (candidaturaExistente) {
       throw new ConflictException('Usuário já se candidatou a esta vaga');
     }
-  
+
     const novaCandidatura = this.candidaturaRepository.create({
       vaga,
       usuario: user,
     });
-  
+
     return this.candidaturaRepository.save(novaCandidatura);
   }
 
@@ -68,10 +71,12 @@ export class CandidaturasService {
     return candidatura;
   }
 
-  async update(id: number, updateDto: UpdateCandidaturaDto): Promise<Candidatura> {
+  async update(
+    id: number,
+    updateDto: UpdateCandidaturaDto,
+  ): Promise<Candidatura> {
     const candidatura = await this.findOne(id);
 
-    // Exemplo de atualização simples, adapte conforme os campos do DTO
     Object.assign(candidatura, updateDto);
 
     return this.candidaturaRepository.save(candidatura);
@@ -80,21 +85,14 @@ export class CandidaturasService {
   async remove(id: number): Promise<void> {
     const candidatura = await this.findOne(id);
     await this.candidaturaRepository.remove(candidatura);
-  }  
-  
+  }
+
   async findVagasDoUsuario(usuarioId: number): Promise<number[]> {
     const candidaturas = await this.candidaturaRepository.find({
       where: { usuario: { id: usuarioId } },
-      relations: ['vaga', 'usuario'], // 👈 IMPORTANTE: carregar 'usuario'
+      relations: ['vaga', 'usuario'],
     });
-  
-    console.log('📝 Candidaturas encontradas para usuário', usuarioId, ':', candidaturas);
-  
-    return candidaturas.map(c => c.vaga.id);
+
+    return candidaturas.map((c) => c.vaga.id);
   }
-  
-  
-  
-  
-  
 }

@@ -5,7 +5,6 @@ import { AuthService } from '../../services/auth.service';
 import { filter } from 'rxjs/operators';
 import * as bootstrap from 'bootstrap';
 
-
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -21,10 +20,8 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Chama ao iniciar
     this.carregarDadosDoToken();
 
-    // E escuta mudanças de rota (ex: após login)
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -39,8 +36,9 @@ export class NavbarComponent implements OnInit {
   toggleMenu() {
     const navbar = document.getElementById('navbarNav');
     if (!navbar) return;
-  
-    const instance = bootstrap.Collapse.getInstance(navbar) || new bootstrap.Collapse(navbar);
+
+    const instance =
+      bootstrap.Collapse.getInstance(navbar) || new bootstrap.Collapse(navbar);
     navbar.classList.contains('show') ? instance.hide() : instance.show();
   }
 

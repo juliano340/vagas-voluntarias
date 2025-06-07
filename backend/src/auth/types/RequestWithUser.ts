@@ -5,6 +5,5 @@ export interface RequestWithUser extends Request {
     id: number;
     email: string;
     role: string;
-    // adicione outros campos do payload do token se quiser
   };
 }

@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { VagasService } from '../../services/vagas.service';
 import { Toast } from 'bootstrap';
 import { Router, NavigationEnd } from '@angular/router';
@@ -18,14 +24,12 @@ export class VagasComponent implements OnInit, OnDestroy {
   routerSubscription!: Subscription;
   vagasComMensagens: number[] = [];
 
-
   @ViewChild('toastSucesso', { static: false }) toastSucesso!: ElementRef;
 
   constructor(private vagasService: VagasService, private router: Router) {}
 
   ngOnInit() {
-    // Sempre reseta o estado quando entra na rota
-    this.routerSubscription = this.router.events.subscribe(event => {
+    this.routerSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.resetarEstado();
         this.carregarDados();
@@ -37,8 +41,8 @@ export class VagasComponent implements OnInit, OnDestroy {
 
     if (this.isCandidato) {
       this.vagasService.vagasComMensagensRecebidas().subscribe({
-        next: (ids) => this.vagasComMensagens = ids,
-        error: () => this.vagasComMensagens = []
+        next: (ids) => (this.vagasComMensagens = ids),
+        error: () => (this.vagasComMensagens = []),
       });
     }
   }
@@ -49,7 +53,6 @@ export class VagasComponent implements OnInit, OnDestroy {
     }
   }
 
-  // 🔄 Limpa todas as variáveis ao trocar de usuário
   resetarEstado() {
     this.vagas = [];
     this.vagasCandidatadas = [];
@@ -59,18 +62,14 @@ export class VagasComponent implements OnInit, OnDestroy {
 
   carregarDados() {
     console.clear();
-    console.log('%c[DEBUG] 🚀 carregando dados...', 'color: cyan');
 
     const token = localStorage.getItem('token');
     this.isLogado = !!token;
-    console.log('[DEBUG] Token encontrado?', token ? 'SIM' : 'NÃO');
 
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
         this.isCandidato = payload.role === 'candidato';
-        console.log('[DEBUG] Usuário é candidato?', this.isCandidato);
-        console.log('[DEBUG] Payload do token:', payload);
       } catch (error) {
         console.error('[DEBUG] Erro ao decodificar token:', error);
       }
@@ -79,15 +78,14 @@ export class VagasComponent implements OnInit, OnDestroy {
     if (this.isCandidato) {
       this.vagasService.vagasCandidatadas().subscribe({
         next: (ids: number[]) => {
-          this.vagasCandidatadas = ids.map(Number); // ✅ Força o tipo number
-          console.log('[DEBUG] IDs das vagas já candidatadas:', this.vagasCandidatadas);
+          this.vagasCandidatadas = ids.map(Number);
           this.buscar();
         },
         error: (err) => {
           console.error('[DEBUG] Erro ao buscar vagas candidatadas:', err);
           this.vagasCandidatadas = [];
           this.buscar();
-        }
+        },
       });
     } else {
       this.vagasCandidatadas = [];
@@ -96,15 +94,10 @@ export class VagasComponent implements OnInit, OnDestroy {
   }
 
   buscar() {
-    console.log('[DEBUG] Buscando vagas com filtros:', {
-      titulo: this.titulo,
-      localidade: this.localidade,
-    });
-
-    this.vagasService.listarVagas({ titulo: this.titulo, localidade: this.localidade })
+    this.vagasService
+      .listarVagas({ titulo: this.titulo, localidade: this.localidade })
       .subscribe((data: any[]) => {
         this.vagas = data;
-        console.log('[DEBUG] Vagas carregadas:', this.vagas);
       });
   }
 
@@ -116,7 +109,6 @@ export class VagasComponent implements OnInit, OnDestroy {
 
     this.vagasService.candidatarSe(id).subscribe({
       next: () => {
-        // 🔄 Sempre recarrega da API após a candidatura
         this.vagasService.vagasCandidatadas().subscribe((ids) => {
           this.vagasCandidatadas = ids.map(Number);
         });
@@ -131,7 +123,7 @@ export class VagasComponent implements OnInit, OnDestroy {
         } else {
           alert('Erro ao realizar candidatura.');
         }
-      }
+      },
     });
   }
 

@@ -21,7 +21,7 @@ export class RegisterComponent {
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      role: ['candidato', Validators.required], // valor padrão
+      role: ['candidato', Validators.required],
     });
   }
 
@@ -31,10 +31,11 @@ export class RegisterComponent {
       return;
     }
 
-    this.http.post('http://localhost:3000/users', this.registerForm.value)
+    this.http
+      .post('http://localhost:3000/users', this.registerForm.value)
       .subscribe({
         next: () => this.router.navigate(['/login']),
-        error: () => this.erro = 'Erro ao cadastrar. Tente novamente.',
+        error: () => (this.erro = 'Erro ao cadastrar. Tente novamente.'),
       });
   }
 }

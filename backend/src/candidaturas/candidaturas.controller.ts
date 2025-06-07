@@ -14,8 +14,7 @@ import { CandidaturasService } from './candidaturas.service';
 import { CreateCandidaturaDto } from './dto/create-candidatura.dto';
 import { UpdateCandidaturaDto } from './dto/update-candidatura.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { RequestWithUser } from '../auth/types/RequestWithUser'; // ajuste o caminho
-
+import { RequestWithUser } from '../auth/types/RequestWithUser';
 
 @Controller('candidaturas')
 export class CandidaturasController {
@@ -25,7 +24,7 @@ export class CandidaturasController {
   @Post()
   create(@Body() createCandidaturaDto: CreateCandidaturaDto, @Req() req: any) {
     const userId = req.user.id;
-    console.log(req.user) // ← ID do usuário autenticado via JWT
+
     return this.candidaturasService.create(userId, createCandidaturaDto);
   }
 
@@ -37,7 +36,6 @@ export class CandidaturasController {
   @UseGuards(JwtAuthGuard)
   @Get('minhas')
   async findMinhas(@Req() req: any) {
-    console.log('🔐 Usuario autenticado:', req.user);
     const usuarioId = req.user.id;
     return this.candidaturasService.findVagasDoUsuario(usuarioId);
   }
@@ -59,6 +57,4 @@ export class CandidaturasController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.candidaturasService.remove(id);
   }
-
-  
 }
