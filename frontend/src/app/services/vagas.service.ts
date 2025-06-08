@@ -8,7 +8,6 @@ import { environment } from '../../environments/environment.prod'; // Adjust the
   providedIn: 'root',
 })
 export class VagasService {
-  // private readonly api = 'http://localhost:3000/vagas';
   private readonly apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}

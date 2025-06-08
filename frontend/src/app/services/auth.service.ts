@@ -14,7 +14,6 @@ export class AuthService {
     this.getRoleFromToken()
   );
   role$ = this.roleSubject.asObservable();
-  // private readonly api = 'http://localhost:3000/auth';
 
   private readonly apiUrl = environment.apiUrl;
 
