@@ -18,11 +18,7 @@ import { PerfilComponent } from './pages/perfil/perfil.component';
 import { RouterModule } from '@angular/router';
 import { LandingComponent } from './pages/landing/landing.component';
 import { MensagensComponent } from './pages/mensagens/mensagens.component';
-
-
-
-
-
+import { ApiStatusComponent } from './components/api-status/api-status.component';
 
 @NgModule({
   declarations: [
@@ -35,18 +31,20 @@ import { MensagensComponent } from './pages/mensagens/mensagens.component';
     MinhasVagasComponent,
     PerfilComponent,
     LandingComponent,
-    MensagensComponent
+    MensagensComponent,
+    ApiStatusComponent,
   ],
   imports: [
     BrowserModule,
     RouterModule,
     AppRoutingModule,
-    FormsModule, 
+    FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
-  bootstrap: [AppComponent]
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  ],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
