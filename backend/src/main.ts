@@ -8,7 +8,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:4200',
       'https://vagas-voluntarias.vercel.app',
-      'https://vagas.juliano340.com/',
+      'https://vagas.juliano340.com',
     ],
     credentials: true,
   });
