@@ -1,6 +1,8 @@
 <div class="api-status">
   <span [class.online]="apiOnline" [class.offline]="!apiOnline" class="status-indicator"></span>
   <span class="status-label">
-    {{ apiOnline ? 'API Online' : 'API Inativa' }}
+    {{ apiOnline ? 'API Online' : 'API Inativa' }} <span class="small">(Leva até 1 minuto para a API ativar - agurde um
+      pouco se não estiver
+      online)</span>
   </span>
 </div>

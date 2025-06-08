@@ -20,12 +20,12 @@ export class VagasService {
     if (filtros?.titulo) params = params.set('titulo', filtros.titulo);
     if (filtros?.localidade)
       params = params.set('localidade', filtros.localidade);
-    return this.http.get(this.apiUrl, { params });
+    return this.http.get(`${this.apiUrl}/vagas`, { params });
   }
 
   criarVaga(dados: any) {
     const token = localStorage.getItem('token');
-    return this.http.post(this.apiUrl, dados, {
+    return this.http.post(`${this.apiUrl}/vagas`, dados, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -43,18 +43,18 @@ export class VagasService {
 
   removerVaga(id: number) {
     const token = localStorage.getItem('token');
-    return this.http.delete(`${this.apiUrl}/${id}`, {
+    return this.http.delete(`${this.apiUrl}/vagas/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
   }
 
   buscarVaga(id: number) {
-    return this.http.get(`${this.apiUrl}/${id}`);
+    return this.http.get(`${this.apiUrl}/vagas/${id}`);
   }
 
   atualizarVaga(id: number, dados: any) {
     const token = localStorage.getItem('token');
-    return this.http.patch(`${this.apiUrl}/${id}`, dados, {
+    return this.http.patch(`${this.apiUrl}/vagas/${id}`, dados, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
