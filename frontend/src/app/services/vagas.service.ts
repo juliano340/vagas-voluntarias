@@ -1,25 +1,32 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment.prod'; // Adjust the import path as necessary
+// import { environment } from '../../environments/environment'; // Uncomment this line if you want to use the local environment
 
 @Injectable({
   providedIn: 'root',
 })
 export class VagasService {
-  private readonly api = 'http://localhost:3000/vagas';
+  // private readonly api = 'http://localhost:3000/vagas';
+  private readonly apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
-  listarVagas(filtros?: { titulo?: string; localidade?: string }): Observable<any> {
+  listarVagas(filtros?: {
+    titulo?: string;
+    localidade?: string;
+  }): Observable<any> {
     let params = new HttpParams();
     if (filtros?.titulo) params = params.set('titulo', filtros.titulo);
-    if (filtros?.localidade) params = params.set('localidade', filtros.localidade);
-    return this.http.get(this.api, { params });
+    if (filtros?.localidade)
+      params = params.set('localidade', filtros.localidade);
+    return this.http.get(this.apiUrl, { params });
   }
 
   criarVaga(dados: any) {
     const token = localStorage.getItem('token');
-    return this.http.post(this.api, dados, {
+    return this.http.post(this.apiUrl, dados, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -28,7 +35,7 @@ export class VagasService {
 
   minhasVagas(): Observable<any[]> {
     const token = localStorage.getItem('token');
-    return this.http.get<any[]>('http://localhost:3000/vagas/minhas', {
+    return this.http.get<any[]>(`${this.apiUrl}/vagas/minhas`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -37,18 +44,18 @@ export class VagasService {
 
   removerVaga(id: number) {
     const token = localStorage.getItem('token');
-    return this.http.delete(`${this.api}/${id}`, {
-      headers: { Authorization: `Bearer ${token}` }
+    return this.http.delete(`${this.apiUrl}/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
     });
   }
 
   buscarVaga(id: number) {
-    return this.http.get(`http://localhost:3000/vagas/${id}`);
+    return this.http.get(`${this.apiUrl}/${id}`);
   }
 
   atualizarVaga(id: number, dados: any) {
     const token = localStorage.getItem('token');
-    return this.http.patch(`http://localhost:3000/vagas/${id}`, dados, {
+    return this.http.patch(`${this.apiUrl}/${id}`, dados, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -57,7 +64,7 @@ export class VagasService {
 
   vagasCandidatadas(): Observable<number[]> {
     const token = localStorage.getItem('token');
-    return this.http.get<number[]>(`http://localhost:3000/candidaturas/minhas`, {
+    return this.http.get<number[]>(`${this.apiUrl}/candidaturas/minhas`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -65,20 +72,19 @@ export class VagasService {
   }
 
   candidatarSe(vagaId: number) {
-    return this.http.post('http://localhost:3000/candidaturas', {
+    return this.http.post(`${this.apiUrl}/candidaturas`, {
       vagaId,
     });
   }
 
   listarCandidatos(vagaId: number) {
-    return this.http.get<any[]>(`http://localhost:3000/vagas/${vagaId}/candidatos`);
+    return this.http.get<any[]>(`${this.apiUrl}/vagas/${vagaId}/candidatos`);
   }
 
   vagasComMensagensRecebidas() {
     const token = localStorage.getItem('token');
-    return this.http.get<number[]>(`http://localhost:3000/mensagens/recebidas/vagas`, {
-      headers: { Authorization: `Bearer ${token}` }
+    return this.http.get<number[]>(`${this.apiUrl}/mensagens/recebidas/vagas`, {
+      headers: { Authorization: `Bearer ${token}` },
     });
   }
-  
 }

@@ -14,7 +14,8 @@ export class AuthService {
     this.getRoleFromToken()
   );
   role$ = this.roleSubject.asObservable();
-  private readonly api = 'http://localhost:3000/auth';
+  // private readonly api = 'http://localhost:3000/auth';
+
   private readonly apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
@@ -37,12 +38,14 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, { email, password }).pipe(
-      tap((res: any) => {
-        localStorage.setItem('token', res.access_token);
-        this.notifyLogin();
-      })
-    );
+    return this.http
+      .post(`${this.apiUrl}/auth/login`, { email, password })
+      .pipe(
+        tap((res: any) => {
+          localStorage.setItem('token', res.access_token);
+          this.notifyLogin();
+        })
+      );
   }
 
   getToken() {

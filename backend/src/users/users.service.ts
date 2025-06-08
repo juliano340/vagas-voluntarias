@@ -48,7 +48,8 @@ export class UsersService {
       password: hashedPassword,
     });
 
-    return this.userRepository.save(user);
+    this.userRepository.save(user);
+    return;
   }
 
   findAll(): Promise<User[]> {
