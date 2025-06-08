@@ -3,16 +3,19 @@ import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
-
+import { environment } from '../../environments/environment.prod'; // Adjust the import path as necessary
+// import { environment } from '../../environments/environment'; // Uncomment this line if you want to use the local environment
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-
-  private roleSubject = new BehaviorSubject<string | null>(this.getRoleFromToken());
+  private roleSubject = new BehaviorSubject<string | null>(
+    this.getRoleFromToken()
+  );
   role$ = this.roleSubject.asObservable();
   private readonly api = 'http://localhost:3000/auth';
+  private readonly apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -31,14 +34,13 @@ export class AuthService {
   notifyLogin() {
     const role = this.getRoleFromToken();
     this.roleSubject.next(role);
-  }  
+  }
 
   login(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.api}/login`, { email, password }).pipe(
+    return this.http.post(`${this.apiUrl}/login`, { email, password }).pipe(
       tap((res: any) => {
         localStorage.setItem('token', res.access_token);
         this.notifyLogin();
-
       })
     );
   }
@@ -50,6 +52,5 @@ export class AuthService {
   logout() {
     localStorage.removeItem('token');
     this.roleSubject.next(null);
-
   }
 }
