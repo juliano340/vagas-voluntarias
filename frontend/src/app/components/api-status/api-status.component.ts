@@ -9,17 +9,24 @@ import { environment } from '../../../environments/environment.prod'; // Adjust 
 })
 export class ApiStatusComponent implements OnInit {
   apiOnline: boolean = false;
+  intervalId: any;
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.checkApi();
-    setInterval(() => this.checkApi(), 5000); // verifica a cada 5 segundos
+    this.intervalId = setInterval(() => this.checkApi(), 5000);
   }
 
   checkApi() {
     this.http.get(`${environment.apiUrl}/ping`).subscribe({
-      next: () => (this.apiOnline = true),
+      next: () => {
+        this.apiOnline = true;
+        if (this.intervalId) {
+          clearInterval(this.intervalId);
+          this.intervalId = null;
+        }
+      },
       error: () => (this.apiOnline = false),
     });
   }
