@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://vagas-voluntarias.onrender.com',
+  apiUrl: 'https://api-vagas.juliano340.com/',
 };
