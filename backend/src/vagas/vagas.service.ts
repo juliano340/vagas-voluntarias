@@ -58,7 +58,15 @@ export class VagasService {
       query.andWhere('vaga.titulo ILIKE :titulo', { titulo: `%${titulo}%` });
     }
 
-    return query.getMany();
+    const vagas = await query.getMany();
+
+    return vagas.map((v) => {
+      if (v.publicadaPor) {
+        const { role, createdAt, password, ...rest } = v.publicadaPor as any;
+        v.publicadaPor = rest as User;
+      }
+      return v;
+    });
   }
 
   findOne(id: number) {
