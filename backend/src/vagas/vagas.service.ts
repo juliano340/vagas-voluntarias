@@ -62,7 +62,8 @@ export class VagasService {
 
     return vagas.map((v) => {
       if (v.publicadaPor) {
-        const { role, createdAt, password, ...rest } = v.publicadaPor as any;
+        const { email, role, createdAt, password, ...rest } =
+          v.publicadaPor as any;
         v.publicadaPor = rest as User;
       }
       return v;
