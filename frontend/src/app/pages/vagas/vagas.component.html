@@ -15,6 +15,8 @@
   </form>
 
   <div class="row">
+
+    <div *ngIf="vagas.length === 0" class="alert alert-info text-center"> Nenhuma vaga encontrada.</div>
     <div class="col-md-4 mb-3" *ngFor="let vaga of vagas">
       <div class="card h-100 shadow-sm">
         <div class="card-body">
